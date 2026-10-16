@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>To Do List Karyawan</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <header class="top">
+      <div class="profile">
+        <p class="name" id="profileName">Rasendriya Archy</p>
+        <p class="role" id="profileRole">Staff Developer</p>
+      </div>
+      <div class="time">
+        <p id="day"></p>
+        <p id="date"></p>
+      </div>
+    </header>
+
+    <form id="taskForm" class="card">
+      <label for="taskText">Tugas baru</label>
+      <textarea id="taskText" rows="3" placeholder="Tulis pekerjaanmu hari ini..." required></textarea>
+
+      <div class="row">
+        <div>
+          <label for="priority">Level prioritas</label>
+          <select id="priority">
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
+        </div>
+        <div>
+          <label for="deadline">Tenggat (opsional)</label>
+          <input type="date" id="deadline">
+        </div>
+      </div>
+
+      <button type="submit" class="btn primary">Submit</button>
+    </form>
+
+    <div class="columns">
+      <section class="card">
+        <div class="section-head">
+          <h2>To Do</h2>
+          <button id="deleteAll" class="btn danger" type="button">Delete All</button>
+        </div>
+        <ul id="todoList"></ul>
+      </section>
+
+      <section class="card">
+        <h2>Done</h2>
+        <ul id="doneList"></ul>
+      </section>
+    </div>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
