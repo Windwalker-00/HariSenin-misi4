@@ -6,7 +6,25 @@ const todoList = document.getElementById("todoList");
 const doneList = document.getElementById("doneList");
 const deleteAllBtn = document.getElementById("deleteAll");
 
-let tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
+function tanggalOffset(selisihHari) {
+  const d = new Date();
+  d.setDate(d.getDate() + selisihHari);
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const t = String(d.getDate()).padStart(2, "0");
+  return `${d.getFullYear()}-${m}-${t}`;
+}
+
+const dataDummy = [
+  { id: 1, text: "Kerjakan laporan modul 5", priority: "high", deadline: tanggalOffset(1), done: false },
+  { id: 2, text: "Balas email dosen pembimbing", priority: "medium", deadline: tanggalOffset(2), done: false },
+  { id: 3, text: "Rapikan folder tugas", priority: "low", deadline: "", done: false },
+  { id: 4, text: "Kumpulkan jurnal modul 2", priority: "high", deadline: tanggalOffset(-1), done: false },
+  { id: 5, text: "Belajar materi Bootstrap", priority: "medium", deadline: "", done: true }
+].map(t => ({ ...t, createdAt: new Date().toISOString() }));
+
+// Dummy hanya dipakai saat belum ada data tersimpan sama sekali
+const tersimpan = localStorage.getItem("tasks");
+let tasks = tersimpan === null ? dataDummy : JSON.parse(tersimpan);
 
 const hari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
 const bulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli",
@@ -86,9 +104,18 @@ function fillList(listEl, items, emptyText) {
   items.forEach(t => listEl.appendChild(createItem(t)));
 }
 
+const urutanPrioritas = { high: 0, medium: 1, low: 2 };
+
+// High dulu, lalu Medium, lalu Low. Kalau prioritas sama, yang lebih dulu dibuat tampil duluan
+function urutkan(daftar) {
+  return [...daftar].sort((a, b) =>
+    urutanPrioritas[a.priority] - urutanPrioritas[b.priority] || a.id - b.id
+  );
+}
+
 function render() {
-  fillList(todoList, tasks.filter(t => !t.done), "Belum ada tugas. Tulis satu di atas.");
-  fillList(doneList, tasks.filter(t => t.done), "Belum ada tugas yang selesai.");
+  fillList(todoList, urutkan(tasks.filter(t => !t.done)), "Belum ada tugas. Tulis satu di atas.");
+  fillList(doneList, urutkan(tasks.filter(t => t.done)), "Belum ada tugas yang selesai.");
 }
 
 function toggleTask(id) {
